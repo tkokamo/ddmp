@@ -38,9 +38,19 @@ scan_iter s v thread = scan_iter scan vec thread
 
 unfold s thread = scan_iter [s] [] thread
 
-print_state s = do
-    print $ (fst s)
+print_trans [] = do putStr $ ""
+print_trans (x:xs) = do
+    print $ x
+    print_trans xs
 
+print_state [] = do putStr $ ""
+print_state (x:xs) = do
+    putStrLn $ show (fst x) ++ " ID: " ++ show (fst (snd x))
+    print_trans (trans (snd (snd x)))
+    print_state xs
+--    print_trans (snd (snd x))
+
+main :: IO()
 main = do
     let p = unfold S0 thread_P
-    print $ p
+    print_state p
